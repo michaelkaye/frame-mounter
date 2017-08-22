@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Frame Mounting tool</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+
+    
+    <body>
+        <div class="navbar-wrapper">
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a href="index.html" class="navbar-brand">Print mount framing tool</a>
+                </div>
+                <div id="navbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="tool.html">The Tool</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 sidebar">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th colspan=2>Sizes in mm</th>
+                            </tr>
+                        </thead>
+                        <tbody class="inputs">
+                            <!-- populated with table rowsby the javascript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-9 main">
+                        <div class="panel-body text-center render">
+                            <!-- populated by the SVG -->
+                        </div>
+                </div>
+            </div>
+        </div>
+    
+    </body>
+    <script src="./functions.js"></script>
+    <script>
+        add_text_input("Print URL", "image_url", "default.png");
+        add_bar_input("Frame height (measured)", "height",            200,  50, 4200);
+        add_bar_input("Frame width (measured)",  "width",             200,  50, 4200);
+        add_bar_input("Print height (measured)", "image_height",      200,  40, 4200);
+        add_bar_input("Print width (measured)",  "image_width",       200,  40, 4200);
+        add_bar_input("Print offset height (adjust)", "image_offset_height", 0, -200,  200);
+        add_bar_input("Print offset width (adjust)",  "image_offset_width",  0, -200,  200);
+        add_bar_input("Mount height (adjust)", "mount_height",        20,   10, 200);
+        add_bar_input("Mount width (adjust)",  "mount_width",         20,   10, 200);
+        add_bar_input("Mount offset height (adjust)", "offset_mount_height", 0, -200,  200);
+        add_bar_input("Mount offset width (adjust)",  "offset_mount_width",  0, -200,  200);
+        add_bar_input("Zoom (%)",     "zoom",                         100,  10, 100);
+
+        initialize();
+    </script>
+</html>

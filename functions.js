@@ -46,7 +46,7 @@ function initialize() {
         var base_name = this.id.replace("_box","").replace("_bar","").replace("_text","");
         var box = d3.select('#'+base_name+"_box").merge(d3.select('#'+base_name+'_bar'));
         box.property("value",this.value);
-        frame[base_name] = this.value;
+        frame[base_name] = +this.value;
         update();
     });
     update();
@@ -72,6 +72,7 @@ function top_angle(d) {
         [outer_cut_start_x, outer_cut_end_y],
         [outer_cut_start_x, outer_cut_start_y]
     ];
+    poly = poly.map(function (point) { return [(point[0] + d['offset_mount_width']), (point[1] + d['offset_mount_height'])]; })
     poly = poly.map(function (point) { return [(point[0] * zoom / 100), (point[1] * zoom / 100)]; })
     return poly.map(function (point) { return point.join(','); }).join(' ');
 }
@@ -96,6 +97,7 @@ function bottom_angle(d) {
         [outer_cut_end_x, outer_cut_start_y],
         [outer_cut_end_x, outer_cut_end_y]
     ];
+    poly = poly.map(function (point) { return [(point[0] + d['offset_mount_width']), (point[1] + d['offset_mount_height'])]; })
     poly = poly.map(function (point) { return [(point[0] * zoom / 100), (point[1] * zoom / 100)]; })
     return poly.map(function (point) { return point.join(','); }).join(' ');
 }
@@ -105,10 +107,10 @@ function mount_colour(d) {
     var min_y = 0;
     var max_x = d['width'];
     var max_y = d['height'];
-    var cut_start_x = d['mount_width'] - d['mount_angle'];
-    var cut_end_x = d['width'] - d['mount_width'] + d['mount_angle'];
-    var cut_start_y = d['mount_height'] - d['mount_angle'];
-    var cut_end_y = d['height'] - d['mount_height'] + d['mount_angle'];
+    var cut_start_x = d['mount_width'] - d['mount_angle'] + d['offset_mount_width'];
+    var cut_end_x = d['width'] - d['mount_width'] + d['mount_angle'] +d['offset_mount_width'];
+    var cut_start_y = d['mount_height'] - d['mount_angle'] + d['offset_mount_height'];
+    var cut_end_y = d['height'] - d['mount_height'] + d['mount_angle'] + d['offset_mount_height'];
     var zoom = d['zoom'];
     var poly = [
         [min_x,min_y],
@@ -123,6 +125,7 @@ function mount_colour(d) {
         [min_x,max_y],
         [min_x,min_y]
     ];
+    console.log(poly);
     poly = poly.map(function (point) { return [(point[0] * zoom / 100), (point[1] * zoom / 100)]; })
     return poly.map(function (point) { return point.join(','); }).join(' ');
 }
@@ -138,8 +141,8 @@ function manage(svg) {
         .attr("height", function(d) { return d['height'] * d['zoom'] / 100;});
 
     var image = svg.select("image")
-        .attr("x", function(d) { return ((d['width'] - d['image_width']) / 2 ) * d['zoom'] / 100;})
-        .attr("y", function(d) { return ((d['height'] - d['image_height']) / 2 ) * d['zoom'] / 100;})
+        .attr("x", function(d) { return ((d['width'] - d['image_width']) / 2 ) + d['image_offset_width'] * d['zoom'] / 100;})
+        .attr("y", function(d) { return ((d['height'] - d['image_height']) / 2 ) + d['image_offset_height'] * d['zoom'] / 100;})
         .attr("width", function(d) { return d['image_width'] * d['zoom'] / 100;})
         .attr("height", function(d) { return d['image_height'] * d['zoom'] / 100;})
         .attr("preserveAspectRatio","none")
