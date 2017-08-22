@@ -44,8 +44,10 @@ function initialize() {
 
     inputElems.on('change', function (d, i) {
         var base_name = this.id.replace("_box","").replace("_bar","").replace("_text","");
-        var box = d3.select('#'+base_name+"_box").merge(d3.select('#'+base_name+'_bar'));
-        box.property("value",this.value);
+        d3.select('#'+base_name+"_box")
+            .property("value", this.value);
+        d3.select('#'+base_name+'_bar')
+            .property("value", this.value);
         frame[base_name] = +this.value;
         update();
     });
@@ -141,8 +143,8 @@ function manage(svg) {
         .attr("height", function(d) { return d['height'] * d['zoom'] / 100;});
 
     var image = svg.select("image")
-        .attr("x", function(d) { return ((d['width'] - d['image_width']) / 2 ) + d['image_offset_width'] * d['zoom'] / 100;})
-        .attr("y", function(d) { return ((d['height'] - d['image_height']) / 2 ) + d['image_offset_height'] * d['zoom'] / 100;})
+        .attr("x", function(d) { return ((d['width'] - d['image_width']) / 2  + d['image_offset_width']) * d['zoom'] / 100;})
+        .attr("y", function(d) { return ((d['height'] - d['image_height']) / 2  + d['image_offset_height']) * d['zoom'] / 100;})
         .attr("width", function(d) { return d['image_width'] * d['zoom'] / 100;})
         .attr("height", function(d) { return d['image_height'] * d['zoom'] / 100;})
         .attr("preserveAspectRatio","none")
