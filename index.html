@@ -4,8 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Frame Mounting tool</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <script src="https://d3js.org/d3.v4.min.js"></script>
     </head>
 
@@ -37,6 +40,39 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                    <div class="col-md-4">
+                        You've just bought a print of some amazing art, and you want to put it up on the wall. You can look round the hardware store but the frames are all the wrong size. What you need is a mounting board for the image.
+                    </div>
+                    <div class="col-md-8">
+                        <img src="./problem.png">
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="col-md-4">
+                        To size this up, take the frame apart and measure the height and width in millimeters. Measure the height and width of the print too. Enter them in the form above. You can adjust the sizes and colour to find something that will look pleasing to the eye. There's a zoom function if you find your image getting too big.
+                    </div>
+                    <div class="col-md-8">
+                        <img src="./measure.png">
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="col-md-4">
+                        This lets you cut out a suitable mount from mounting board.
+                    </div>
+                    <div class="col-md-8">
+                        <img src="./mount.png"> 
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="col-md-4">
+                        Finally, put the frame back together with the mount and image, and hang on your wall.
+                    </div>
+                    <div class="col-md-8">
+                        <img src="./construct.png">
+                    </div>
+                </div>
+            </div>
 
         </div>
     
@@ -51,7 +87,7 @@
         add_bar_input("Image width",  "image_width", 200, 40, 4200);
         add_bar_input("Zoom (%)",     "zoom",        100, 10, 100);
 
-        add_text_input("Image URL", "image_url", "http://michaelkaye.github.io/frame-mounter/default.jpg");
+        add_text_input("Image URL", "image_url", "http://michaelkaye.github.io/frame-mounter/default.png");
         initialize();
     </script>
 </html>
