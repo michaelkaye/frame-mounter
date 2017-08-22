@@ -1,18 +1,39 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Frame Mounting tool</title>
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
         <script src="https://d3js.org/d3.v4.min.js"></script>
     </head>
+
     
     <body>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-6">
-                    <div class="inputs">
-                    </div>
+                <div class="col-md-3 sidebar">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Measurement</th>
+                                <th colspan=2>Size in mm</th>
+                            </tr>
+                        </thead>
+                        <tbody class="inputs">
+                            <!-- populated with table rowsby the javascript -->
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-6">
-                    <div class="render">
+                <div class="col-md-9 main">
+                    <div class="panel panel-primary">
+                        <div class="panel-header">
+                            Preview to scale
+                        </div>
+                        <div class="panel-body text-center render">
+                            <!-- populated by the SVG -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -23,64 +44,67 @@
    
     <script>
 
-    var frame = {
-        height: 200,
-        width: 300,
-        mount_width: 45,
-        mount_height: 45,
-        mount_angle: 5,
-        image_height: 140,
-        image_width: 240,
-        image_url: "http://michaelkaye.github.io/frame-mounter/sample.jpg"
+    // Default mount_angle. This is hardly ever wanted to be changed
+    var frame = { 
+        mount_angle: 5
     };
 
-    function add_text_input(title, id, def) {
-        frame[id] = def;
-        var inputgroup = d3.select('.inputs').append("div").attr("class","form-group");
-        inputgroup.append("label").attr("for",id+"_bar").text(title);
-        inputgroup.append("input")
-            .attr("type","text")
-            .attr("id",id+"_text")
-            .attr("class","params")
-            .property("value",def);
+
+    // Helper functions that create default configuration
+    function add_text_input(title, id, default_value) {
+        frame[id] = default_value;
+        var inputgroup = d3.select('.inputs').append("tr").attr("class","");
+        inputgroup.append("td").text(title);
+        inputgroup.append("td").attr("colspan",2)
+            .append("input")
+              .attr("type","text")
+              .attr("id",id+"_text")
+              .attr("class","params form-control")
+              .property("value",default_value);
     }
+    
     function add_bar_input(title, id, def, min, max) {
         frame[id] = def;
-        var inputgroup = d3.select('.inputs').append("div").attr("class","form-group");
-        inputgroup.append("label").attr("for",id+"_bar").text(title);
-        inputgroup.append("input")
-            .attr("type","range")
-            .attr("id",id+"_bar")
-            .attr("class","params")
-            .attr("min",min)
-            .attr("max",max)
-            .property("value",def);
-        inputgroup.append("input")
-            .attr("type","text")
-            .attr("size","6")
-            .attr("id",id+"_box")
-            .attr("class","params")
-            .property("value",def);
+        var inputgroup = d3.select('.inputs').append("tr").attr("class","");
+        inputgroup.append("td").text(title);
+        inputgroup.append("td")
+            .append("input")
+              .attr("type","range")
+              .attr("id",id+"_bar")
+              .attr("class","params form-control")
+              .attr("min",min)
+              .attr("max",max)
+              .property("value",def);
+        inputgroup.append("td")
+            .append("input")
+              .attr("type","text")
+              .attr("size","6")
+              .attr("id",id+"_box")
+              .attr("class","params form-control")
+              .property("value",def);
     }
 
-    add_bar_input("Frame height (mm)", "height",200,0,4200);
-    add_bar_input("Frame width (mm)", "width",200,0,4200);
-    add_bar_input("Mount height (mm)", "mount_height",20,0,200);
-    add_bar_input("Mount width (mm)", "mount_width",20,0,200);
-    add_bar_input("Image height (mm)", "image_height",200,0,4200);
-    add_bar_input("Image width (mm)", "image_width",200,0,4200);
-    add_bar_input("Zoom (%)", "zoom", 100,10,100);
-    add_text_input("Image URL", "image_url", "http://www.cats.org.uk/uploads/images/featurebox_sidebar_kids/grief-and-loss.jpg");
+    add_bar_input("Frame height", "height",      200, 50, 4200);
+    add_bar_input("Frame width",  "width",       200, 50, 4200);
+    add_bar_input("Mount height", "mount_height",20,  10, 200);
+    add_bar_input("Mount width",  "mount_width", 20,  10, 200);
+    add_bar_input("Image height", "image_height",200, 40, 4200);
+    add_bar_input("Image width",  "image_width", 200, 40, 4200);
+    add_bar_input("Zoom (%)",     "zoom",        100, 10, 100);
+
+    add_text_input("Image URL", "image_url", "http://michaelkaye.github.io/frame-mounter/default.png");
+
+
     var inputElems = d3.selectAll('.params');
+
     inputElems.on('change', function (d, i) {
-        console.log(this.id);
-        var name = this.id.replace("_box","").replace("_bar","").replace("_text","");
-        var box = d3.select('#'+name+"_box").merge(d3.select('#'+name+'_bar'));
+        var base_name = this.id.replace("_box","").replace("_bar","").replace("_text","");
+        var box = d3.select('#'+base_name+"_box").merge(d3.select('#'+base_name+'_bar'));
         box.property("value",this.value);
-        frame[name] = this.value;
-        update([frame]);
+        frame[base_name] = this.value;
+        update();
     });
-    update([frame]);
+    update();
     
 
     function top_angle(d) {
@@ -188,9 +212,9 @@
             .attr("points",bottom_angle);
     }
 
-    function update( frames) {
+    function update() {
 
-        var div = d3.select(".render").selectAll(".frame").data(frames);
+        var div = d3.select(".render").selectAll(".frame").data([frame]);
         var svg = div.selectAll('svg');
         svg = div.selectAll('svg');
         manage(svg);
